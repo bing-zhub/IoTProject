@@ -6,7 +6,7 @@ const char* ssid = "ESP_D54736";
 bool toggle=0;
 ESP8266WebServer server(80);
 
-void handleRoot() {
+void handleData() {
   String message = "";
   
   if (server.arg("heartbeat")== ""){     //Parameter not found
@@ -32,7 +32,7 @@ void setup() {
   IPAddress myIP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(myIP);
-  server.on("/Led", handleRoot);
+  server.on("/data", handleData);
   server.begin();
   Serial.println("Server started");
 }

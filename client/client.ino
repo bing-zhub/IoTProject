@@ -20,7 +20,7 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
-void loop() {
+void postDataToServer(String PostData){
   Serial.print("connecting to ");
   Serial.println(host);
   WiFiClient client;
@@ -28,9 +28,8 @@ void loop() {
   if (!client.connect("192.168.4.1", httpPort)) {
     Serial.println("connection failed");
     return;
-  }
-  String PostData = "heartbeat="+String(heartbeat++);    
-  client.println("POST /Led HTTP/1.1");
+  } 
+  client.println("POST /data HTTP/1.1");
   client.println("Host: 192.168.4.1");
   client.println("Cache-Control: no-cache");
   client.println("Content-Type: application/x-www-form-urlencoded");
@@ -43,7 +42,11 @@ void loop() {
     String line = client.readStringUntil('\r');
     Serial.print(line);
   }
-  delay(100);
+}
+
+void loop() {
+  postDataToServer("heartbeat="+String(heartbeat++));
+  delay(500);
   Serial.println();
   Serial.println("closing connection");             
 }
