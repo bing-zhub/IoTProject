@@ -23,9 +23,9 @@ ESP8266WebServer Server;
 WebServer Server;
 #endif
 AutoConnect      Portal(Server);
-AutoConnectConfig   Config;       // Enable autoReconnect supported on v0.9.4
+AutoConnectConfig   Config;
 
-#define TIMEZONE    (3600 * 8)    // Tokyo
+#define TIMEZONE    (3600 * 8)  
 #define NTPServer1  "cn.pool.ntp.org"
 #define NTPServer2  "time1.google.com"
 

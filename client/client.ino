@@ -45,8 +45,7 @@ void postDataToServer(String PostData){
 }
 
 void loop() {
-  postDataToServer("heartbeat="+String(heartbeat++));
-  delay(500);
-  Serial.println();
-  Serial.println("closing connection");             
+  postDataToServer("humi="+String(37)+"&temp="+String(75));
+  Serial.println("closing connection");
+  delay(5000);             
 }

@@ -1,29 +1,43 @@
+#include "SoftwareSerial.h"
+#include <ArduinoJson.h>
+#include <ESP8266WebServer.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
-#include <ESP8266WebServer.h>
-#include "SoftwareSerial.h"
 
-const char* ssid = "ESP_D54736"; 
+const char *ssid = "ESP_D54736";
 ESP8266WebServer server(80);
 SoftwareSerial dSerial(D0, D1, false, 256);
+String humi="-1", temp="-1", dist="-1";
+int heartbeat = 0;
 
 void handleData() {
   String message = "";
-  char data[255];
-  if (server.arg("heartbeat")== ""){     //Parameter not found
-  
-    message = "heartbeat Argument not found";
-  
-  }else{     //Parameter found
-  
-    message = "heartbeat  = ";
-    message += server.arg("heartbeat");     //Gets the value of the query parameter
-    strcpy(data, message.c_str());
-    dSerial.write(data);
-    yield();
-    Serial.println(data);
-  }
-  server.send(200, "text/plain", message);       //Response to the HTTP request
+  if (server.arg("humi") != "")
+    humi = server.arg("humi");
+  if (server.arg("temp") != "")
+    temp = server.arg("temp");
+  if (server.arg("dist") != "") 
+    dist = server.arg("dist");
+    
+  publishData(humi, temp, dist);
+  server.send(200, "text/plain", "get data");
+  heartbeat++;
+  if(heartbeat>65535)
+    heartbeat = 0;
+}
+
+void publishData(String humi, String temp, String dist) {
+  StaticJsonBuffer<200> jsonBuffer;
+  JsonObject &root = jsonBuffer.createObject();
+  root["humi"] = humi;
+  root["temp"] = temp;
+  root["dist"] = dist;
+  root["heartbeat"] = (String)heartbeat;
+  char data[200];
+  root.printTo(data, root.measureLength() + 1);
+  dSerial.write(data);
+  yield();
+  Serial.println(data);
 }
 
 void setup() {
@@ -40,6 +54,4 @@ void setup() {
   Serial.println("Server started");
 }
 
-void loop() {
-  server.handleClient();  
-}
+void loop() { server.handleClient(); }
