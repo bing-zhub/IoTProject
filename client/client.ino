@@ -18,6 +18,7 @@ void setup() {
   Serial.println("WiFi connected");  
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
+  pinMode(A0, INPUT);
 }
 
 void postDataToServer(String PostData){
@@ -36,7 +37,8 @@ void postDataToServer(String PostData){
   client.print("Content-Length: ");
   client.println(PostData.length());
   client.println();
-  client.println(PostData);        
+  client.println(PostData);
+  Serial.println(PostData);        
   delay(10);
   while(client.available()){
     String line = client.readStringUntil('\r');
@@ -45,7 +47,7 @@ void postDataToServer(String PostData){
 }
 
 void loop() {
-  postDataToServer("humi="+String(37)+"&temp="+String(75));
-  Serial.println("closing connection");
+  int light = analogRead(A0);
+  postDataToServer("light="+String(light));
   delay(5000);             
 }

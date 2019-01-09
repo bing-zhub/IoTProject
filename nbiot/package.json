@@ -1,0 +1,15 @@
+{
+  "name": "nbiot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "nbiot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "paho.mqtt.js": "^2.0.5"
+  }
+}

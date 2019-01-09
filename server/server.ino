@@ -7,31 +7,28 @@
 const char *ssid = "ESP_D54736";
 ESP8266WebServer server(80);
 SoftwareSerial dSerial(D0, D1, false, 256);
-String humi="-1", temp="-1", dist="-1";
+String light="-1", pressure="-1";
 int heartbeat = 0;
 
 void handleData() {
   String message = "";
-  if (server.arg("humi") != "")
-    humi = server.arg("humi");
-  if (server.arg("temp") != "")
-    temp = server.arg("temp");
-  if (server.arg("dist") != "") 
-    dist = server.arg("dist");
+  if (server.arg("light") != "")
+    light = server.arg("light");
+  if (server.arg("pressure") != "")
+    pressure = server.arg("pressure");
     
-  publishData(humi, temp, dist);
+  publishData(light, pressure);
   server.send(200, "text/plain", "get data");
   heartbeat++;
   if(heartbeat>65535)
     heartbeat = 0;
 }
 
-void publishData(String humi, String temp, String dist) {
+void publishData(String light, String pressure) {
   StaticJsonBuffer<200> jsonBuffer;
   JsonObject &root = jsonBuffer.createObject();
-  root["humi"] = humi;
-  root["temp"] = temp;
-  root["dist"] = dist;
+  root["light"] = light;
+  root["pressure"] = pressure;
   root["heartbeat"] = (String)heartbeat;
   char data[200];
   root.printTo(data, root.measureLength() + 1);
